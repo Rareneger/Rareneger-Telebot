@@ -1,5 +1,7 @@
 import telebot
 import sys
+from urllib3.exceptions import ReadTimeoutError 
+from requests.exceptions import ReadTimeout, ConnectionError
 
 bot = telebot.TeleBot(sys.argv[1])
 
@@ -49,4 +51,9 @@ def default_message(message):
     bot.reply_to(message, 'Para cadastrar este chat para receber a confirmação de seu atendimento clique em /cadastrar')
 
 if __name__ == '__main__':
-    bot.polling()
+    in_error = False
+    while True:
+        try:
+            bot.polling()
+        except (ReadTimeoutError, ReadTimeout, ConnectionError):
+            pass
