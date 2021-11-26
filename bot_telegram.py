@@ -14,14 +14,28 @@ def is_true(msg):
 def is_register(message):
     chat_id = message.chat.id
     if chat_id in to_register:
-        to_register.remove(chat_id)
         return True
     else:
         return False
 
+def mark_registered(message):
+    to_register.remove(message.chat.id)
+
+def mark_to_register(message):
+    to_register.append(message.chat.id)
+
+def is_number_valid(message):
+    if message.text.isdigit() and len(message.text) in (11, 12):
+        return True
+    return False
+
 @bot.message_handler(func=is_register)
 def register_chat(message):
-    bot.reply_to(message, 'Número registrado com sucesso!')
+    if is_number_valid(message):
+        mark_registered(message)
+        bot.reply_to(message, 'Número registrado com sucesso!')
+    else:
+        bot.reply_to(message, 'O número não é válido, digite novamente')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -30,7 +44,7 @@ def start_message(message):
 
 @bot.message_handler(commands=['cadastrar'])
 def register_message(message):
-    to_register.append(message.chat.id)
+    mark_to_register(message)
     bot.reply_to(message, 'Agora envie o seu número de atendimento')
 
 @bot.message_handler(func=is_true)
