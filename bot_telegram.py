@@ -1,10 +1,7 @@
 import telebot
+import sys
 
-def get_api_key():
-    with open('API_KEY.txt', 'r') as file:
-        return file.read()
-
-bot = telebot.TeleBot(get_api_key())
+bot = telebot.TeleBot(sys.argv[1])
 
 to_register = []
 
